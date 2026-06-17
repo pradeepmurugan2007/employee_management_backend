@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/todo")
 @CrossOrigin(origins = {
         "http://localhost:5173",
-        "https://frontend-react-crud-ten.vercel.app"
+        "https://project-rp8pg.vercel.app"
 })
 public class todocontroller {
     @Autowired
