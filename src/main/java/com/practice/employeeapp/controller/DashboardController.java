@@ -73,7 +73,14 @@ public class DashboardController {
     }
 
     @GetMapping("/departments")
-    public ResponseEntity<?> getDepartmentStats() {
-        return new ResponseEntity<>(departmentRepo.findAll(), HttpStatus.OK);
+    public ResponseEntity<Map<String, Long>> getDepartmentStats() {
+        List<com.practice.employeeapp.models.Employee> allEmployees = employeeRepo.findAll();
+        Map<String, Long> stats = new HashMap<>();
+        for (com.practice.employeeapp.models.Employee e : allEmployees) {
+            String dept = (e.getDepartmentName() != null && !e.getDepartmentName().isEmpty()) 
+                            ? e.getDepartmentName() : "Unassigned";
+            stats.put(dept, stats.getOrDefault(dept, 0L) + 1L);
+        }
+        return new ResponseEntity<>(stats, HttpStatus.OK);
     }
 }
