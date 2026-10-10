@@ -55,14 +55,42 @@ public class AttendanceController {
         if (record.getWorkDate() == null) {
             record.setWorkDate(LocalDate.now());
         }
-        if (record.getCheckInAt() == null && "CHECK_IN".equalsIgnoreCase(record.getAttendanceType())) {
-            record.setCheckInAt(LocalDateTime.now());
+
+        Optional<AttendanceRecord> existing = attendanceRepo.findByEmployeeIdAndWorkDate(record.getEmployeeId(), record.getWorkDate());
+        
+        if ("CHECK_IN".equalsIgnoreCase(record.getAttendanceType())) {
+            if (existing.isPresent() && existing.get().getCheckInAt() != null) {
+                return new ResponseEntity<>("Attendance already checked in for today.", HttpStatus.BAD_REQUEST);
+            }
+            if (record.getCheckInAt() == null) {
+                record.setCheckInAt(LocalDateTime.now());
+            }
+            if (record.getStatus() == null) {
+                record.setStatus("PRESENT");
+            }
+            return new ResponseEntity<>(attendanceRepo.save(record), HttpStatus.CREATED);
+        } else if ("CHECK_OUT".equalsIgnoreCase(record.getAttendanceType())) {
+            if (existing.isEmpty()) {
+                return new ResponseEntity<>("No check-in record found for today.", HttpStatus.BAD_REQUEST);
+            }
+            AttendanceRecord r = existing.get();
+            if (r.getCheckOutAt() != null) {
+                return new ResponseEntity<>("Already checked out for today.", HttpStatus.BAD_REQUEST);
+            }
+            
+            LocalDateTime checkoutTime = record.getCheckOutAt() != null ? record.getCheckOutAt() : LocalDateTime.now();
+            r.setCheckOutAt(checkoutTime);
+            
+            if (r.getCheckInAt() != null) {
+                Duration duration = Duration.between(r.getCheckInAt(), checkoutTime);
+                long hours = duration.toHours();
+                long minutes = duration.toMinutesPart();
+                r.setWorkingHours(hours + "h " + minutes + "m");
+            }
+            return new ResponseEntity<>(attendanceRepo.save(r), HttpStatus.OK);
         }
-        if (record.getStatus() == null) {
-            record.setStatus("PRESENT");
-        }
-        AttendanceRecord saved = attendanceRepo.save(record);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+
+        return new ResponseEntity<>("Invalid attendance type", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/{id}")
