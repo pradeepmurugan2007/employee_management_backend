@@ -86,8 +86,12 @@ public class TodoController {
 
             return "Login Success";
         }
-
         return "Invalid Username or Password";
+    }
+
+    @PostMapping("/logout")
+    public String logout() {
+        return "Logout Success";
     }
 
     @PostMapping("/forgot-password")
