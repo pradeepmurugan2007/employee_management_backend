@@ -1,4 +1,5 @@
-package com.practice.HelloWorld;
+package com.practice.employeeapp;
+
 
 public class HelloWorldController {
 

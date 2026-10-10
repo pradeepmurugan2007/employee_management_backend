@@ -1,10 +1,11 @@
-package com.practice.HelloWorld;
+package com.practice.employeeapp;
+
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CrudTests {
+class EmployeeApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,4 +1,4 @@
-package com.practice.HelloWorld.models;
+package com.practice.employeeapp.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Data
-public class todo {
+public class Todo {
     @Id
     @GeneratedValue
     Integer id;
