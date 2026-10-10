@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/todo")
@@ -19,6 +22,9 @@ import java.util.List;
 public class todocontroller {
     @Autowired
     private todoservise todoservice;
+
+    @Autowired
+    private JavaMailSender mailSender;
     @GetMapping("/get")
     String gettodo(){
 
@@ -82,6 +88,26 @@ public class todocontroller {
         }
 
         return "Invalid Username or Password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String forgotPassword(@RequestBody Map<String, String> body) {
+        String username = body.get("username");
+        users found = todoservice.checklogin(username);
+        if (found != null) {
+            try {
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setTo(username);
+                message.setSubject("Your Password");
+                message.setText("Your password is: " + found.getPassword());
+                mailSender.send(message);
+                return "Password sent to email";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Failed to send email";
+            }
+        }
+        return "User not found";
     }
     @DeleteMapping
   void deleterec(@RequestBody todo tod){
