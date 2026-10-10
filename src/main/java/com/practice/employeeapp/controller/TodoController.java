@@ -103,7 +103,7 @@ public class TodoController {
                 helper.setTo(username);
                 helper.setSubject("EmpLy - Your Password Recovery");
                 
-                String resetLink = "http://localhost:5173/reset-password?email=" + username;
+                String resetLink = "https://emply-employee-management.vercel.app/reset-password?email=" + username;
                 String htmlMsg = "<div style='font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 30px; text-align: center; color: #1e293b;'>"
                         + "<h1 style='margin-bottom: 5px;'><span style='color: #093c44;'>Emp</span><span style='color: #0d9488;'>Ly</span></h1>"
                         + "<p style='color: #64748b; font-size: 14px; margin-top: 0;'>Employee Management</p>"

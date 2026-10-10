@@ -52,7 +52,7 @@ public class TodoService {
     }
     public User checklogin(String name){
 
-        return UserRep.findByUsername(name);
+        return UserRep.findFirstByUsername(name);
     }
     public List<Employee> getEmployees(){
 
