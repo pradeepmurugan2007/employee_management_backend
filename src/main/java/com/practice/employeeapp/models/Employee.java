@@ -33,7 +33,8 @@ public class Employee {
 
     private String address;
 
-    @Column(name = "photo_url")
+    @Lob
+    @Column(name = "photo_url", columnDefinition = "TEXT")
     private String photoUrl;
 
     @Column(name = "department_id")
