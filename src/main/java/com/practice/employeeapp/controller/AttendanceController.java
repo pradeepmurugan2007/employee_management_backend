@@ -27,8 +27,12 @@ public class AttendanceController {
     @GetMapping
     public ResponseEntity<List<AttendanceRecord>> getAttendance(
             @RequestParam(required = false) String from,
-            @RequestParam(required = false) String to) {
-        if (from != null && to != null) {
+            @RequestParam(required = false) String to,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search) {
+        if ((status != null && !status.isEmpty()) || (search != null && !search.isEmpty())) {
+            return new ResponseEntity<>(attendanceRepo.searchAttendance(status, search), HttpStatus.OK);
+        } else if (from != null && to != null) {
             LocalDate fromDate = LocalDate.parse(from);
             LocalDate toDate = LocalDate.parse(to);
             return new ResponseEntity<>(attendanceRepo.findByWorkDateBetween(fromDate, toDate), HttpStatus.OK);

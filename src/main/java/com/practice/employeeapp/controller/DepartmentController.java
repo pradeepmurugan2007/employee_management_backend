@@ -24,8 +24,16 @@ public class DepartmentController {
     private EmployeeRepository employeeRepo;
 
     @GetMapping
-    public ResponseEntity<List<Department>> getAllDepartments() {
-        return new ResponseEntity<>(departmentRepo.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<Department>> getAllDepartments(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search) {
+        List<Department> departments;
+        if ((status != null && !status.isEmpty()) || (search != null && !search.isEmpty())) {
+            departments = departmentRepo.searchDepartments(status, search);
+        } else {
+            departments = departmentRepo.findAll();
+        }
+        return new ResponseEntity<>(departments, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

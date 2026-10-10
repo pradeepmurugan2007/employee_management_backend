@@ -22,10 +22,11 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees(
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search) {
         List<Employee> employees;
-        if (status != null && !status.isEmpty()) {
-            employees = employeeRepo.findByStatus(status);
+        if ((status != null && !status.isEmpty()) || (search != null && !search.isEmpty())) {
+            employees = employeeRepo.searchEmployees(status, search);
         } else {
             employees = employeeRepo.findAll();
         }

@@ -24,11 +24,15 @@ public class LeaveRequestController {
 
     @GetMapping
     public ResponseEntity<List<LeaveRequest>> getAllLeaveRequests(
-            @RequestParam(required = false) String status) {
-        if (status != null && !status.isEmpty()) {
-            return new ResponseEntity<>(leaveRepo.findByStatus(status), HttpStatus.OK);
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search) {
+        List<LeaveRequest> requests;
+        if ((status != null && !status.isEmpty()) || (search != null && !search.isEmpty())) {
+            requests = leaveRepo.searchLeaveRequests(status, search);
+        } else {
+            requests = leaveRepo.findAll();
         }
-        return new ResponseEntity<>(leaveRepo.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(requests, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
